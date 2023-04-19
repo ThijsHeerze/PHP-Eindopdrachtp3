@@ -42,9 +42,9 @@ class Cd extends Product{
     }
 
     /*De getTotalValue()-functie berekent de totale waarde van de voorraad van een bepaalde CD door de prijs te vermenigvuldigen met het aantal in voorraad (numInStock).*/
-    public function getTotalValue() {
-        return $this->getPrice() * $this->getNumInStock();
-    }
+    // public function getTotalValue() {
+    //     return $this->getPrice() * $this->getNumInStock();
+    // }
 
     /*De getAllProperties()-functie geeft een string terug met alle eigenschappen van de CD, inclusief de extra eigenschappen.*/
     // public function getAllProperties(){
@@ -56,7 +56,11 @@ class Cd extends Product{
             ", NumInStock: " . $this->getNumInStock() . ", Artist: " . $this->getArtist() .
             ", NumSongs: " . $this->getNumSongs() . ", Label: " . $this->getLabel();
     }
-}
 
-// $test = new Cd($naam, $aantalInVoorraad, $minimumVoorraad, $prijs, $actief, $artiest, $aantalSongs, $label);
-// echo $test;
+    public function toString()
+    {
+        return parent::toString() . "Artiest: " . $this->getArtiest() . "<br>"
+            . "Aantal songs: " . $this->getAantalSongs() . "<br>"
+            . "Label: " . $this->getLabel() . "<br>";
+    }
+}

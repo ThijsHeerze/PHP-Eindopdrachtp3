@@ -9,14 +9,14 @@ class Dvd extends Product{
     private $lengteInMinuten;
     private $jaarUitgifte;
     private $filmStudio;
-    // private $productCode;
+    private $productCode;
 
     public function __construct($naam, $aantalInVoorraad, $minimumVoorraad, $prijs, $actief, $lengteInMinuten, $jaarUitgifte, $filmStudio){
         parent::__construct($naam, $aantalInVoorraad, $minimumVoorraad, $prijs, $actief);
         $this->lengteInMinuten = $lengteInMinuten;
         $this->jaarUitgifte = $jaarUitgifte;
         $this->filmStudio = $filmStudio;
-        // $this->productCode = $productCode;
+        $this->productCode = $productCode;
     }
 
     public function setLengteInMinuten($lengteInMinuten){
@@ -44,7 +44,7 @@ class Dvd extends Product{
     }
 
     public function getProductCode() {
-        // return $this->productCode;
+        return $this->productCode;
     }
     public function setProductCode($productCode){
         $this->productCode = $productCode;
@@ -52,29 +52,21 @@ class Dvd extends Product{
 
     /*De getTotalValue() functie berekent de totale waarde van de voorraad van de DVD, 
     rekening houdend met een factor van 1.05.*/
-    public function getTotalValue(){
-        // return $this->getPrice() * $this->getQuantityInStock() * 1.05;
-    }
+    // public function getTotalValue(){
+    //     return $this->getPrice() * $this->getNumInStock() * 1.05;
+    // }
     
-    /*De formatLengteInMinuten() functie berekent de uren en minuten op basis van de eigenschap `*/
-    public function formatLengteInMinuten() {
-        $hours = floor($this->lengteInMinuten / 60);
-        $minutes = $this->lengteInMinuten % 60;
-        return str_pad($hours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($minutes, 2, "0", STR_PAD_LEFT);
+    //Deze functie berekent de uren en minuten
+    public function lengteInMinuten() {
+        $uren = floor($this->lengteInMinuten / 60);
+        $minuten = $this->lengteInMinuten % 60;
+        return sprintf("%02d:%02d", $uren, $minuten);
     }
 
-    public function toString() {
-        return "Product code: " . $this->getProductCode() .
-            // "\nProduct name: " . $this->getProductName() .
-            // "\nPrice: " . $this->getPrice() .
-            // "\nDescription: " . $this->getDescription() .
-            // "\nLength: " . $this->formatLengteInMinuten() .
-            "\nYear of release: " . $this->jaarUitgifte .
-            "\nFilm studio: " . $this->filmStudio .
-            // "\nQuantity in stock: " . $this->getQuantityInStock() .
-            "\nTotal value: " . $this->getTotalValue();
+    public function toString()
+    {
+        return parent::toString() . "Lengte in minuten: " . $this->getArtiest() . "<br>"
+            . "Jaaruitgifte: " . $this->getAantalSongs() . "<br>"
+            . "Filmstudio: " . $this->getLabel() . "<br>";
     }
 }
-
-// $test = new Dvd($aantalInVoorraad, $minimumVoorraad, $prijs, $actief, $lengteInMinuten, $jaarUitgifte, $filmStudio);
-// echo $test;

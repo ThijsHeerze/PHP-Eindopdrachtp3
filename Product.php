@@ -1,128 +1,154 @@
 <?php
 
 class Product {
-    protected static $itemnr = 1;
-    protected $naam;
-    protected $aantalInVoorraad;
-    protected $minimumVoorraad;
-    protected $prijs;
-    protected $actief;
+    private static $itemnr_counter = 0; // Een static variabele die bijhoudt hoeveel producten er zijn aangemaakt
+    private $itemnr;
+    private $naam;
+    private $aantalInVoorraad;
+    private $minimumVoorraad;
+    private $prijs;
+    private $actief;
 
-    public function __construct($naam, $aantalInVoorraad, $minimumVoorraad, $prijs, $actief){
-        self::$itemnr++;
+    // Constructor:
+    public function __construct($naam, $aantalInVoorraad, $minimumVoorraad, $prijs, $actief) {
+        self::$itemnr_counter++;
+        $this->itemnr = self::$itemnr_counter;
         $this->naam = $naam;
         $this->aantalInVoorraad = $aantalInVoorraad;
         $this->minimumVoorraad = $minimumVoorraad;
         $this->prijs = $prijs;
         $this->actief = $actief;
     }
-
-    public static function getItemnr(){
-        return self::$itemnr;
+    
+    //Getters en setters:
+    public function getItemnr() {
+        return $this->itemnr;
     }
 
-    public function getNaam(){
+    public function getNaam() {
         return $this->naam;
     }
 
-    public function setNaam($naam){
+    public function setNaam($naam) {
         $this->naam = $naam;
     }
 
-    public function getAantalInVoorraad(){
+    public function getAantalInVoorraad() {
         return $this->aantalInVoorraad;
     }
 
-    public function setAantalInVoorraad($aantal){
-        if ($this->actief){
+    public function setAantalInVoorraad($aantal) {
+        if ($this->actief) {    // Als het product actief is, mag het aantal in voorraad niet negatief worden
             $this->aantalInVoorraad += $aantal;
         }
     }
 
-    public function getMinimumVoorraad(){
+    public function getMinimumVoorraad() {  
         return $this->minimumVoorraad;
     }
 
-    public function setMinimumVoorraad($minimum){
+    public function setMinimumVoorraad($minimum) {
         $this->minimumVoorraad = $minimum;
     }
 
-    public function getPrijs(){
+    public function getPrijs() {
         return $this->prijs;
     }
 
-    public function setPrijs($prijs){
+    public function setPrijs($prijs) {
         $this->prijs = $prijs;
     }
 
-    public function isActief(){
+    public function isActief() {
         return $this->actief;
     }
 
-    public function setActief($actief){
+    public function setActief($actief) {
         $this->actief = $actief;
     }
 
-    public function __toString(){
-        return $this->naam 
-        .'<br/>'. $this->aantalInVoorraad 
-        .'<br/>'. $this->minimumVoorraad 
-        .'<br/>'. $this->prijs 
-        .'<br/>'. $this->actief;
+    //toString functie returnt alles als strings.
+    public function toString() {
+        //als de boolean $this->actief waar is, wordt "Ja" gereturned, anders "Nee"
+        return "Itemnr: " . $this->itemnr . 
+        ", Naam: " . $this->naam . 
+        ", Aantal in voorraad: " . $this->aantalInVoorraad . 
+        ", Minimum voorraad: " . $this->minimumVoorraad . 
+        ", Prijs: " . $this->prijs . 
+        ", Actief: " . ($this->actief ? "Ja" : "Nee");
     }
 
-    public function ophogenVoorraad($aantal) {
+    //Deze functie verhoogd de voorraad.
+    public function verhoogVoorraad($aantal) {
         if ($this->actief) {
             $this->aantalInVoorraad += $aantal;
         }
     }
-
-    public function verlagenVoorraad($aantal) {
-        if ($this->aantalInVoorraad - $aantal >= $this->minimumVoorraad) {
+    //Deze functie zorgt ervoor dat de voorraad wordt verlaagd.
+    public function verlaagVoorraad($aantal) {
+        if ($this->aantalInVoorraad - $aantal >= $this->minimumVoorraad) { // Als het aantal in voorraad na het verlagen van de voorraad groter of gelijk is aan het minimum aantal in voorraad, mag het aantal in voorraad verlaagd worden
             $this->aantalInVoorraad -= $aantal;
         }
     }
-
-    public function totaleWaarde() {
+    //functie getTotaleWaarde returnt de prijs x aantalInVoorraad
+    public function getTotaleWaarde() {
         return $this->prijs * $this->aantalInVoorraad;
     }
 }
 
-$test = new Product('thijs', '20', '5', '4 euro', 'ja');
-
-echo $test;
-
+//Met deze functie worden de klassen geladen
 spl_autoload_register(function ($class_name) {
     include $class_name . '.php';
 });
 
-$csv = array();
-$file = fopen('dvd.csv', 'r');
-$file = fopen('cd.csv', 'r');
-
-if (!$file) {
-    die("Unable to open file.");
+// Functie om data uit een CSV-bestand te lezen en om te zetten in een array
+function readCSV($file) {
+    $rows = array();
+    if (($handle = fopen($file, 'r')) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+           error_reporting(0);
+            $rows[] = $data;
+        }
+        fclose($handle);
+    }
+    return $rows;
 }
 
-while (($line = fgetcsv($file)) !== FALSE) {
-    $dvd = new DVD($line[0], (int)$line[1], (int)$line[2], (float)$line[3], (bool)$line[4], $line[5], (int)$line[6], $line[7]);
-    $cd = new CD($line[0], (int)$line[1], (int)$line[2], (float)$line[3], (bool)$line[4], $line[5], (int)$line[6], $line[7]);
-    $csv[] = $dvd;
-    $csv[] = $cd;
+//Array met data uit csv bestand voor de cds en dvds
+$cdData = readCSV('bestand.csv');
+$dvdData = readCSV('bestand.csv');
+
+//Array voor de cds
+$cds = array();
+foreach ($cdData as $data) {
+    $cd = new CD($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7], $data[8]);
+    $cds[] = $cd;
 }
 
-fclose($file);
-
-foreach ($csv as $dvd) {
-    echo $dvd->toString() . "<br>";
+//Array voor de dvds
+$dvds = array();
+foreach ($dvdData as $data) {
+    $dvd = new DVD($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7], $data[8]);
+    $dvds[] = $dvd;
 }
 
-foreach ($csv as $dvd) {
-    $product = new DVD($dvd->getTitle(), $dvd->getLength(), $dvd->getPrice(), $dvd->getTax(), $dvd->isDiscounted(), $dvd->getDirector(), $dvd->getAgeRating(), $dvd->getSubtitle());
-    echo $product->toString() . "<br>";
+//Functie sortObjectsByProperty zorgt dat je een array per object kunt sorteren
+function sortObjectsByProperty($objects, $property) {
+    usort($objects, function($a, $b) use ($property) {
+        return $a->$property > $b->$property;
+    });
+    return $objects;
 }
 
-foreach ($csv as $cd) {
-    $product = new CD($cd[0], (int)$cd[1], (int)$cd[2], (float)$cd[3], (bool)$cd[4], $cd[5], (int)$cd[6], $cd[7]);
-    echo $product->toString() . "<br>";
+//Sorteren van cds en dvds op naam en weergeven in browser
+$cds = sortObjectsByProperty($cds, 'naam');
+$dvds = sortObjectsByProperty($dvds, 'naam');
+
+echo "<h2>CD's</h2>"; 
+foreach ($cds as $cd) {
+    echo $cd->toString() . '<br>';
+}
+echo "<br><h2>DVD's</h2>";
+foreach ($dvds as $dvd) {
+    echo $dvd->toString() . '<br>';
 }
