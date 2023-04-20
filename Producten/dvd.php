@@ -1,6 +1,6 @@
 <?php
 include_once('../Product.php');
-
+//alles tzelfde doen als bij cd.php
 class Dvd extends Product{
 
     /*De class heeft de extra eigenschappen lengteInMinuten, jaarUitgifte en filmStudio, en de extra functies getTotalValue(), formatLengteInMinuten() en toString(). 
@@ -52,21 +52,15 @@ class Dvd extends Product{
 
     /*De getTotalValue() functie berekent de totale waarde van de voorraad van de DVD, 
     rekening houdend met een factor van 1.05.*/
-    // public function getTotalValue(){
-    //     return $this->getPrice() * $this->getNumInStock() * 1.05;
-    // }
+
     
     //Deze functie berekent de uren en minuten
-    public function lengteInMinuten() {
-        $uren = floor($this->lengteInMinuten / 60);
-        $minuten = $this->lengteInMinuten % 60;
-        return sprintf("%02d:%02d", $uren, $minuten);
-    }
+
 
     public function toString()
     {
-        return parent::toString() . "Lengte in minuten: " . $this->getArtiest() . "<br>"
-            . "Jaaruitgifte: " . $this->getAantalSongs() . "<br>"
-            . "Filmstudio: " . $this->getLabel() . "<br>";
+        return parent::toString() . "Lengte in minuten: " . $this->getLengteInMinuten() . "<br>"
+            . "Jaaruitgifte: " . $this->getJaarUitgifte() . "<br>"
+            . "Filmstudio: " . $this->getFilmStudio() . "<br>";
     }
 }

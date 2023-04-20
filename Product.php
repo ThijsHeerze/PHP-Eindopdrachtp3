@@ -71,11 +71,11 @@ class Product {
     public function toString() {
         //als de boolean $this->actief waar is, wordt "Ja" gereturned, anders "Nee"
         return "Itemnr: " . $this->itemnr . 
-        ", Naam: " . $this->naam . 
-        ", Aantal in voorraad: " . $this->aantalInVoorraad . 
-        ", Minimum voorraad: " . $this->minimumVoorraad . 
-        ", Prijs: " . $this->prijs . 
-        ", Actief: " . ($this->actief ? "Ja" : "Nee");
+        "<br>Naam: " . $this->naam . 
+        "<br>Aantal in voorraad: " . $this->aantalInVoorraad . 
+        "<br>Minimum voorraad: " . $this->minimumVoorraad . 
+        "<br>Prijs: " . $this->prijs . 
+        "<br>Actief: " . ($this->actief ? "Ja " : "Nee ") . "<br>";
     }
 
     //Deze functie verhoogd de voorraad.
@@ -95,6 +95,9 @@ class Product {
         return $this->prijs * $this->aantalInVoorraad;
     }
 }
+// $dvdData = new DVD();
+
+// echo $dvdData;
 
 //Met deze functie worden de klassen geladen
 spl_autoload_register(function ($class_name) {
@@ -114,21 +117,21 @@ function readCSV($file) {
     return $rows;
 }
 
-//Array met data uit csv bestand voor de cds en dvds
-$cdData = readCSV('bestand.csv');
-$dvdData = readCSV('bestand.csv');
+//Array met data uit de csv bestanden voor de cds en dvds
+$cdData = readCSV('cd.csv');
+$dvdData = readCSV('dvd.csv');
 
 //Array voor de cds
 $cds = array();
 foreach ($cdData as $data) {
-    $cd = new CD($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7], $data[8]);
+    $cd = new CD($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7]);
     $cds[] = $cd;
 }
 
 //Array voor de dvds
 $dvds = array();
 foreach ($dvdData as $data) {
-    $dvd = new DVD($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7], $data[8]);
+    $dvd = new DVD($data[0], $data[1], $data[2], $data[3], $data[4], $data[5], $data[6], $data[7]);
     $dvds[] = $dvd;
 }
 
