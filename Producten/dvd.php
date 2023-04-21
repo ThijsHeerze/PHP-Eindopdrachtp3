@@ -52,10 +52,17 @@ class Dvd extends Product{
 
     /*De getTotalValue() functie berekent de totale waarde van de voorraad van de DVD, 
     rekening houdend met een factor van 1.05.*/
-
+    public function getTotalValue() {
+        return $this->getPrijs() * $this->getAantalInVoorraad() * 1.05;
+    }
     
     //Deze functie berekent de uren en minuten
 
+    public function LengteInMinuten() {
+        $uren = floor($this->lengteInMinuten / 60);
+        $minuten = $this->lengteInMinuten % 60;
+        return sprintf("%02d:%02d", $uren, $minuten);
+    }
 
     public function toString()
     {
